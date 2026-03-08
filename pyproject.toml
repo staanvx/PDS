@@ -1,0 +1,12 @@
+[project]
+name = "phishing-scanner"
+version = "0.1.0"
+description = "Automated phishing domain scanner"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.32.0",
+    "pandas>=2.2.0",
+    "python-whois>=0.9.5",
+    "dnspython>=2.6.1",
+    "colorama>=0.4.6",
+]

@@ -1,0 +1,12 @@
+services:
+  scanner:
+    build: .
+    container_name: phishing-scanner
+    env_file:
+      - .env
+    environment:
+      USE_AMASS: "false"
+    volumes:
+      - ./input:/app/input
+      - ./output:/app/output
+    command: ["uv", "run", "python", "app/main.py"]
