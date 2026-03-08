@@ -15,8 +15,6 @@ from colorama import Fore, Style, init
 
 init(autoreset=True, strip=False)
 
-USE_AMASS = os.getenv("USE_AMASS", "false").lower() == "true"
-
 DNS_KEYWORDS = [
     "bank",
     "login",
@@ -388,40 +386,6 @@ def run_subfinder(domain: str) -> list[str]:
     log_info(f"Running subfinder for {domain}")
     return run_command(["subfinder", "-d", domain, "-silent"], timeout=120)
 
-
-def run_amass(domain: str) -> list[str]:
-    if not USE_AMASS:
-        log_info(f"Skipping amass for {domain}")
-        return []
-
-    log_info(f"Running amass for {domain}")
-
-    results = run_command(
-        [
-            "amass",
-            "enum",
-            "-passive",
-            "-norecursive",
-            "-noalts",
-            "-timeout",
-            "1",
-            "-d",
-            domain,
-        ],
-        timeout=20,
-    )
-
-    found = set()
-    domain_lower = domain.lower()
-
-    for line in results:
-        line = line.strip().lower()
-        if line.endswith(domain_lower):
-            found.add(line)
-
-    return sorted(found)
-
-
 def run_theharvester(domain: str) -> list[str]:
     log_info(f"Running theHarvester for {domain}")
     results = run_command(
@@ -448,7 +412,6 @@ def aggregate_subdomains(domain: str) -> list[str]:
 
     for tool_result in [
         run_subfinder(domain),
-        run_amass(domain),
         run_theharvester(domain),
     ]:
         for item in tool_result:
